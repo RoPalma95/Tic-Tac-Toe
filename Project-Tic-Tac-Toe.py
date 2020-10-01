@@ -1,4 +1,3 @@
-from os import terminal_size
 from random import randrange
 
 board = [['' for i in range(3)] for j in range(3)]
@@ -34,10 +33,10 @@ def DisplayBoard(board):
 	print('+-------'*3, '+\n', sep = '')
 
 def EnterMove(board):
-#
-# the function accepts the board current status, asks the user about their move, 
-# checks the input and updates the board according to the user's decision
-#	
+	#
+	# the function accepts the board current status, asks the user about their move, 
+	# checks the input and updates the board according to the user's decision
+	#	
 	move = int(input("Enter your move: "))
 	
 	while move < 1 or move > 9:
@@ -49,13 +48,12 @@ def EnterMove(board):
 			for j in range(3):
 				if move == board[i][j] and (i != row or j != column):
 					board[i][j] = 'O'
-	
 
 def MakeListOfUsedFields(board):
-#
-# the function browses the board and builds a list of all the free squares; 
-# the list consists of tuples, while each tuple is a pair of row and column numbers
-#
+	#
+	# the function browses the board and builds a list of all the free squares; 
+	# the list consists of tuples, while each tuple is a pair of row and column numbers
+	#
 	global usedSpaces
 
 	for i in range(3):
@@ -65,13 +63,13 @@ def MakeListOfUsedFields(board):
 					usedSpaces += ((i,j),)
 
 def VictoryFor(board, sign):
-#
-# the function analyzes the board status in order to check if 
-# the player using 'O's or 'X's has won the game
-#
+	#
+	# the function analyzes the board status in order to check if 
+	# the player using 'O's or 'X's has won the game
+	#
 	winner = ''
 
-# checking if all elements in the row are  the same:
+	# checking if all elements in the row are  the same:
 
 	for i in range(3):
 		counter = 0
@@ -81,7 +79,7 @@ def VictoryFor(board, sign):
 		if counter == 3:
 			winner = sign
 
-# checking if all the elements in the column are the same
+	# checking if all the elements in the column are the same
 
 	for i in range(3):
 		counter = 0
@@ -93,12 +91,10 @@ def VictoryFor(board, sign):
 
 	return winner
 	
-
-
 def DrawMove(board):
-#
-# the function draws the computer's move and updates the board
-#
+	#
+	# the function draws the computer's move and updates the board
+	#
 	valid = False
 
 	while valid == False:
@@ -111,6 +107,8 @@ def DrawMove(board):
 						board[i][j] = 'X'
 						valid = True
 	
+# Game execution
+
 DisplayBoard(board)
 
 for i in range(4):
