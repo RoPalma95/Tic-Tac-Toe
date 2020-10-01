@@ -1,3 +1,6 @@
+from os import terminal_size
+from random import randrange
+
 board = [['' for i in range(3)] for j in range(3)]
 count = 1
 
@@ -7,8 +10,9 @@ for i in range(3):
 		count += 1
 
 board[1][1] = 'X'	
-usedSpaces = ()
 move = 0
+usedSpaces = ((1, 1),)
+winner = False
 
 def DisplayBoard(board):
 	#
@@ -34,54 +38,98 @@ def EnterMove(board):
 # the function accepts the board current status, asks the user about their move, 
 # checks the input and updates the board according to the user's decision
 #	
-	global move
-
 	move = int(input("Enter your move: "))
 	
-	while(move > 9 or move < 1):
+	while move < 1 or move > 9:
 		move = int(input("Invalid input. Try again: "))
 
-	for i in range(3):
-		for j in range(3):
-			if move == board[i][j]:
-				board[i][j] = 'O'
-				break
-			elif board[i][j] == 'X' or board[i][j] == 'O':
-				print("space is not available")
-		break
+	for pair in usedSpaces:
+		row, column = pair
+		for i in range(3):
+			for j in range(3):
+				if move == board[i][j] and i != row and j != column:
+					board[i][j] = 'O'
+		
 
-def MakeListOfFreeFields(board):
+def MakeListOfUsedFields(board):
 #
 # the function browses the board and builds a list of all the free squares; 
 # the list consists of tuples, while each tuple is a pair of row and column numbers
 #
 	global usedSpaces
-	
+
 	for i in range(3):
 		for j in range(3):
 			if board[i][j] == 'O' or board[i][j] == 'X':
-				if (i,j) not in usedSpaces:
-					usedSpaces += ((i, j),)
-
-	print(usedSpaces)
+				if (i, j) not in usedSpaces:
+					usedSpaces += ((i,j),)
 
 def VictoryFor(board, sign):
 #
 # the function analyzes the board status in order to check if 
 # the player using 'O's or 'X's has won the game
 #
+	winner = ''
+
+# checking if all elements in the row are  the same:
+
+	for i in range(3):
+		counter = 0
+		for j in range(3):
+			if board[i][j] == sign:
+				counter += 1
+		if counter == 3:
+			winner = sign
+
+# checking if all the elements in the column are the same
+
+	for i in range(3):
+		counter = 0
+		for j in range(3):
+			if board[j][i] == sign:
+				counter += 1
+		if counter == 3:
+			winner = sign
+
+	return winner
+	
 
 
-
-# def DrawMove(board):
+def DrawMove(board):
 #
 # the function draws the computer's move and updates the board
 #
+	valid = False
 
+	while valid == False:
+		computerMove = randrange(1, 9)
+		for pair in usedSpaces:
+			row, column = pair
+			for i in range(3):
+				for j in range(3):
+					if computerMove == board[i][j] and i != row and j != column:
+						board[i][j] = 'X'
+						valid = True
+	
 DisplayBoard(board)
-EnterMove(board)
-MakeListOfFreeFields(board)
-DisplayBoard(board)
-EnterMove(board)
-MakeListOfFreeFields(board)
-DisplayBoard(board)
+
+for i in range(8):
+	EnterMove(board)
+	MakeListOfUsedFields(board)
+	DisplayBoard(board)
+	victor = VictoryFor(board, 'O')
+	if victor == 'O':
+		print('You won!')
+		winner = True
+		break
+	DrawMove(board)
+	MakeListOfUsedFields(board)
+	DisplayBoard(board)
+	victor = VictoryFor(board, 'X')
+	if victor == 'X':
+		print('Computer won :(')
+		winner = True
+		break
+
+if not winner:
+	print("It's a tie.")
