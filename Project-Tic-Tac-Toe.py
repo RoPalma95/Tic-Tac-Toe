@@ -47,9 +47,9 @@ def EnterMove(board):
 		row, column = pair
 		for i in range(3):
 			for j in range(3):
-				if move == board[i][j] and i != row and j != column:
+				if move == board[i][j] and (i != row or j != column):
 					board[i][j] = 'O'
-		
+	
 
 def MakeListOfUsedFields(board):
 #
@@ -102,18 +102,18 @@ def DrawMove(board):
 	valid = False
 
 	while valid == False:
-		computerMove = randrange(1, 9)
+		computerMove = randrange(1, 10)
 		for pair in usedSpaces:
 			row, column = pair
 			for i in range(3):
 				for j in range(3):
-					if computerMove == board[i][j] and i != row and j != column:
+					if computerMove == board[i][j] and (i != row or j != column):
 						board[i][j] = 'X'
 						valid = True
 	
 DisplayBoard(board)
 
-for i in range(8):
+for i in range(4):
 	EnterMove(board)
 	MakeListOfUsedFields(board)
 	DisplayBoard(board)
@@ -131,5 +131,5 @@ for i in range(8):
 		winner = True
 		break
 
-if not winner:
+if not winner: 
 	print("It's a tie.")
